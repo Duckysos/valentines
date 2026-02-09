@@ -31,3 +31,35 @@ if (countdownEl) {
   updateCountdown();
   setInterval(updateCountdown, 60 * 1000);
 }
+
+const noBtn = document.querySelector(".no-btn");
+if (noBtn) {
+  const container = noBtn.parentElement;
+
+  const moveButton = (pointerX, pointerY) => {
+    if (!container) return;
+
+    const bounds = container.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+    const btnCenterX = btnRect.left + btnRect.width / 2;
+    const btnCenterY = btnRect.top + btnRect.height / 2;
+    const distance = Math.hypot(pointerX - btnCenterX, pointerY - btnCenterY);
+
+    if (distance > 120) return;
+
+    const maxX = bounds.width - btnRect.width;
+    const maxY = bounds.height - btnRect.height;
+    const nextX = Math.max(0, Math.min(maxX, Math.random() * maxX));
+    const nextY = Math.max(0, Math.min(maxY, Math.random() * maxY));
+
+    noBtn.style.transform = `translate(${nextX - (btnRect.left - bounds.left)}px, ${nextY - (btnRect.top - bounds.top)}px)`;
+  };
+
+  container.addEventListener("mousemove", (event) => {
+    moveButton(event.clientX, event.clientY);
+  });
+
+  container.addEventListener("touchstart", () => {
+    moveButton(window.innerWidth / 2, window.innerHeight / 2);
+  });
+}
